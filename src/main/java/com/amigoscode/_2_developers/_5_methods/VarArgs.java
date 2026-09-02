@@ -12,6 +12,14 @@ public class VarArgs {
     //  Returns the sum of all provided numbers.
     //  If no arguments are provided, return 0.
     //  Hint: use a for-each loop to iterate over 'numbers'.
+    public int sum(int... numbers) {
+        int sum = 0;
+        for (int number : numbers) {
+            sum += number;
+        }
+//        if (numbers.length == 0)
+        return sum;
+    }
 
 
     // TODO: 2 - Create a method: String concatenate(String... strings)
@@ -44,6 +52,9 @@ public class VarArgs {
         //  - sum(5)          -> 5  (one arg)
         //  - sum(1, 2, 3, 4) -> 10 (many args)
         //  Print each result.
+        System.out.println(va.sum());
+        System.out.println(va.sum(5));
+        System.out.println(va.sum(1,2,3,4));
 
 
         System.out.println("\n=== Concatenate ===");
