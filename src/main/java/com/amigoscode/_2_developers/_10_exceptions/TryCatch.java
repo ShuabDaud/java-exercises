@@ -1,7 +1,5 @@
 package com.amigoscode._2_developers._10_exceptions;
 
-import java.util.Scanner;
-
 /**
  * Try-Catch Exercises
  *
@@ -10,7 +8,7 @@ import java.util.Scanner;
  */
 public class TryCatch {
 
-    /**
+     /**
      * Safely accesses an array element at the given index.
      * Returns the element, or -1 if the index is out of bounds.
      *
@@ -23,7 +21,13 @@ public class TryCatch {
         //  try to return arr[index].
         //  catch ArrayIndexOutOfBoundsException, print "Index out of bounds: " + index,
         //  and return -1.
-        return 0;
+
+        try {
+            return arr[index];
+        } catch (IndexOutOfBoundsException e) {
+            IO.println("Index out of bounds: " + index);
+            return -1;
+        }
     }
 
     /**
@@ -36,7 +40,13 @@ public class TryCatch {
     public static int safeParseInt(String text) {
         // TODO: 2 - Wrap Integer.parseInt(text) in a try-catch block.
         //  catch NumberFormatException, print "Cannot parse: " + text, and return 0.
-        return 0;
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            System.out.println(e.getClass());
+            IO.println("Cannot parse: " + text);
+            return 0;
+        }
     }
 
     /**
@@ -54,7 +64,19 @@ public class TryCatch {
         //  finally: print "Division operation completed."
         //  Return the result. (You'll need a local variable since return in try
         //  executes after finally.)
-        return 0;
+        int result = 0;
+        try {
+            result = a / b;
+            return result;
+        } catch (ArithmeticException e) {
+            System.out.println(e.getClass());
+            IO.println("Cannot divide by zero!");
+            result = 0;
+        }
+        finally {
+            IO.println("Division operation completed.");
+        }
+        return result;
     }
 
     /**
