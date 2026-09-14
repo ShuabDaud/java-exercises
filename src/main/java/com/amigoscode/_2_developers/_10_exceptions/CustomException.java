@@ -17,6 +17,19 @@ public class CustomException {
     //  - Have a getter: double getAmount()
     //  Define it as a static inner class here, or as a separate class in this package.
 
+    // checked
+    static class InsufficientFundsException extends Exception {
+        private final double amount;
+
+        public InsufficientFundsException(String message, double amount) {
+            super(message);
+            this.amount = amount;
+        }
+
+        public double getAmount() {
+            return amount;
+        }
+    }
 
     // TODO: 2 - Create a custom UNCHECKED exception class called InvalidAgeException.
     //  It should:
@@ -26,6 +39,15 @@ public class CustomException {
     //    and calls super(message, cause)
     //  Define it as a static inner class here.
 
+    // unchecked
+    static class InvalidAgeException extends RuntimeException {
+        public InvalidAgeException(String message) {
+            super(message);
+        }
+        public InvalidAgeException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
 
     // TODO: 3 - Create a static inner class BankAccount with:
     //  - A private double 'balance' field
@@ -36,20 +58,68 @@ public class CustomException {
     //    Otherwise, subtract amount from balance.
     //  - A method: double getBalance()
 
+    static class BankAccount {
+        private double balance;
+
+        public BankAccount(double balance) {
+            this.balance = balance;
+        }
+
+
+        public void withdraw(double amount) throws InsufficientFundsException {
+            if (amount > balance) {
+                throw new InsufficientFundsException(
+                        "Insufficient funds. Short by " +
+                        (amount - balance), amount - balance
+                );
+            }
+            this.balance = this.balance - amount;
+        }
+
+        public double getBalance() {
+            return balance;
+        }
+    }
+
 
     // TODO: 4 - Create a static method: void validateAge(int age)
     //  If age < 0 or age > 150, throw a new InvalidAgeException with an appropriate message.
     //  Otherwise, print "Age " + age + " is valid."
 
+    public static void validateAge(int age) {
+        if (age < 0 || age > 150)
+            throw new InvalidAgeException("Invalid age: " + age);
+        IO.println("Age " + age + " is valid.");
+    }
+
 
     public static void main(String[] args) {
-        System.out.println("=== Custom Checked Exception (InsufficientFundsException) ===");
+        System.out.println("\n=== Custom Checked Exception (InsufficientFundsException) ===");
         // TODO: 5 - Create a BankAccount with balance 100.
         //  Try to withdraw 50 (should succeed, print remaining balance).
         //  Try to withdraw 75 (should throw InsufficientFundsException).
         //  Catch the exception and print its message and the shortage amount.
         //  Also try validateAge with valid (25) and invalid (-5) values,
         //  catching InvalidAgeException.
+
+        BankAccount account = new BankAccount(100);
+        try {
+            System.out.println("Initial Balance: " + account.getBalance());
+            account.withdraw(50);
+            IO.println("Balance after withdrawing 50: " + account.getBalance());
+            account.withdraw(75);
+        } catch (InsufficientFundsException e) {
+            IO.println("Caught: " + e.getMessage() + " shortage amount: " + e.getAmount());
+        }
+
+        System.out.println("=== Custom Unchecked Exception (InvalidAgeException) ===");
+        try {
+            validateAge(25);
+            validateAge(-5);
+        } catch (InvalidAgeException e) {
+            IO.println("Caught: " + e.getMessage());
+        }
+
 
 
         System.out.println("\n=== Exception Chaining ===");
@@ -61,6 +131,17 @@ public class CustomException {
         //  In an outer try-catch, catch the InvalidAgeException and print:
         //  - The exception message
         //  - The cause (using getCause())
+        try {
+            try {
+                Integer.parseInt("abc");
+                IO.println("Done parsing...");
+            } catch (NumberFormatException e) {
+                throw new InvalidAgeException("Failed to parse age ", e);
+            }
+        } catch (InvalidAgeException e ) {
+            IO.println("Caught: " + e.getMessage());
+            IO.println("Cause: " + e.getCause());
+        }
 
     }
 }

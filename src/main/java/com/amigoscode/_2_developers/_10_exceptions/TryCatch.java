@@ -1,5 +1,7 @@
 package com.amigoscode._2_developers._10_exceptions;
 
+import java.util.Scanner;
+
 /**
  * Try-Catch Exercises
  *
@@ -94,7 +96,17 @@ public class TryCatch {
         //  Catch both ArrayIndexOutOfBoundsException and NumberFormatException
         //  in a single catch block using: catch (ExType1 | ExType2 e)
         //  Print "Error: " + e.getMessage() and return -1.
-        return 0;
+        int result = 0;
+        try {
+            result = Integer.parseInt(data[index]);
+        } catch (NumberFormatException e) {
+            IO.println("Error: " + e.getMessage());
+            return -1;
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
+            return -1;
+        }
+        return result;
     }
 
     /**
@@ -111,7 +123,14 @@ public class TryCatch {
         //  }
         //  catch any exception and return -1.
         //  The Scanner will be automatically closed after the try block.
-        return 0;
+        int result = 0;
+        try (Scanner scanner = new Scanner(input)) {
+            result = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: " + e.getMessage());
+            return -1;
+        }
+        return result;
     }
 
     /**
@@ -125,6 +144,10 @@ public class TryCatch {
         // TODO: 6 - If age < 0, throw a new IllegalArgumentException
         //  with the message "Age cannot be negative: " + age.
         //  Otherwise, return age.
+
+        if (age < 0)
+            throw new IllegalArgumentException("Age cannot be negative: " + age);
+
         return age;
     }
 
@@ -137,12 +160,13 @@ public class TryCatch {
      * @throws NumberFormatException     if value is not a number
      * @throws IllegalArgumentException if the number is negative
      */
-    public static int processValue(String value) {
+    public static int processValue(String value) throws RuntimeException {
         // TODO: 7 - Parse the value to an int using Integer.parseInt(value).
         //  Then call validateAge() with the parsed int.
         //  Do NOT catch any exceptions here — let them propagate to the caller.
         //  This demonstrates that exceptions travel up the call stack.
-        return 0;
+
+        return validateAge(Integer.parseInt(value));
     }
 
     public static void main(String[] args) {
@@ -183,6 +207,8 @@ public class TryCatch {
         try {
             System.out.println("Process '42': " + processValue("42"));
             System.out.println("Process '-5': " + processValue("-5"));
+            System.out.println("Process 'kk': " + processValue("kk"));
+
         } catch (Exception e) {
             System.out.println("Propagated exception: " + e.getClass().getSimpleName() + " - " + e.getMessage());
         }
